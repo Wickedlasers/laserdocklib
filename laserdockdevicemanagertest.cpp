@@ -1,5 +1,7 @@
 #include "LaserdockDeviceManager.h"
 #include "LaserdockDevice.h"
+
+#include <string>
 #include <iostream>
 
 using namespace std;

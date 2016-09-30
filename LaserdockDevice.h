@@ -72,6 +72,8 @@ public:
 
     LaserdockDeviceStatus status();
 
+    bool usb_send(unsigned char *data, int length);
+    unsigned char *usb_get(unsigned char * data, int length);
 
 private:
     LaserdockDevicePrivate * d;

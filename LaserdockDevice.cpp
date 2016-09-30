@@ -356,6 +356,45 @@ bool LaserdockDevice::runner_mode_load(LaserdockSample *samples, uint16_t positi
 }
 
 
+bool LaserdockDevice::usb_send(unsigned char * data, int length){
+    //printf("sending usb, numbytes %d.\n", numbytes);
+    //hexDump("request", (unsigned char *)ba.data(), ba.length());
+
+    int r, actual;
+    r = libusb_bulk_transfer(d->devh_ctl, (1 | LIBUSB_ENDPOINT_OUT), data, length, &actual, 0);
+
+    if(r != 0 || length != actual)
+        return false;
+
+    return true;
+}
+
+
+unsigned char *LaserdockDevice::usb_get(unsigned char * data, int length){
+
+    int r, actual;
+
+    //hexDump("response request", (unsigned char *)ba.data(), ba.length());
+
+    r = libusb_bulk_transfer(d->devh_ctl, (1 | LIBUSB_ENDPOINT_OUT), data, length, &actual, 0);
+    if(r != 0 || actual != length)
+        return NULL;
+
+    unsigned char * response = (unsigned char *)calloc(64, 1);
+
+    r = libusb_bulk_transfer(d->devh_ctl, (1 | LIBUSB_ENDPOINT_IN), response, 64, &actual, 0);
+
+    if(r != 0 || actual != 64 || response[1] != 0)
+    {
+        printf("Read Error: %d, %d\n",  r, actual);
+        //free(response);
+        return NULL;
+    }
+
+    return response;
+}
+
+
 uint16_t float_to_laserdock_xy(float var)
 {
     uint16_t val = (4095 * (var + 1.0)/2.0);

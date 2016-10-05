@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+
+#include "LaserdockDeviceManager.h"
 #include "LaserdockDevice.h"
 
 using namespace std;
@@ -19,7 +21,9 @@ void print_uint32(string name, LaserdockDevice *d, ReadMethodPtr method){
 }
 
 int main() {
-    LaserdockDevice d;
+    LaserdockDeviceManager &lddmanager = LaserdockDeviceManager::getInstance();
+    LaserdockDevice d =  *lddmanager.get_next_available_device();
+
     print_uint32("Firmware major version", &d, &LaserdockDevice::version_major_number);
     print_uint32("Firmware minor version", &d, &LaserdockDevice::version_minor_number);
     d.set_dac_rate(30000);

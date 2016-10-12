@@ -5,11 +5,10 @@
 #ifndef LASERDOCKLIB_LASERDOCKDEVICE_H
 #define LASERDOCKLIB_LASERDOCKDEVICE_H
 
-
 #include <cstdint>
+#include <memory>
+
 #include "libusb/libusb.h"
-
-
 
 typedef struct
 {
@@ -76,8 +75,7 @@ public:
     unsigned char *usb_get(unsigned char * data, int length);
 
 private:
-    LaserdockDevicePrivate * d;
-
+    std::unique_ptr<LaserdockDevicePrivate> d;
 };
 
 #endif //LASERDOCKLIB_LASERDOCKDEVICE_H

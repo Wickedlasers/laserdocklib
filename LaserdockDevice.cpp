@@ -121,7 +121,7 @@ struct LaserdockDevicePrivate {
 
     struct libusb_device_handle *devh_ctl;
     struct libusb_device_handle *devh_data;
-	libusb_device * usbdevice;
+    libusb_device * usbdevice;
 
     bool flipx;
     bool flipy;
@@ -130,7 +130,7 @@ struct LaserdockDevicePrivate {
 
     LaserdockDevicePrivate( libusb_device * device, LaserdockDevice * q_ptr) :
             q(q_ptr) ,
-			usbdevice(device),
+            usbdevice(device),
             devh_ctl(NULL),
             devh_data(NULL),
             status(LaserdockDevice::LaserdockDeviceStatus::UNKNOWN),
@@ -141,14 +141,14 @@ struct LaserdockDevicePrivate {
     }
 
     void initialize() {
-		int r = 0;
-		r = libusb_open(this->usbdevice, &this->devh_ctl);
-		if (r != 0) return;
-		r = libusb_open(this->usbdevice, &this->devh_data);
-		if (r != 0) return;
+        int r = 0;
+        r = libusb_open(this->usbdevice, &this->devh_ctl);
+        if (r != 0) return;
+        r = libusb_open(this->usbdevice, &this->devh_data);
+        if (r != 0) return;
 
         r = libusb_claim_interface(this->devh_ctl, 0);
-		if (r != 0) return;
+        if (r != 0) return;
 
         r = libusb_claim_interface(this->devh_data, 1);
         if (r != 0) return;
@@ -186,7 +186,6 @@ LaserdockDevice::LaserdockDevice(libusb_device * usbdevice) : d(new LaserdockDev
 }
 
 LaserdockDevice::~LaserdockDevice() {
-    delete d;
 }
 
 bool LaserdockDevice::enable_output() {
@@ -196,6 +195,46 @@ bool LaserdockDevice::enable_output() {
 LaserdockDevice::LaserdockDeviceStatus LaserdockDevice::status() {
     return d->status;
 }
+
+
+bool LaserdockDevice::usb_send(unsigned char * data, int length){
+    //printf("sending usb, numbytes %d.\n", numbytes);
+    //hexDump("request", (unsigned char *)ba.data(), ba.length());
+
+    int r, actual;
+    r = libusb_bulk_transfer(d->devh_ctl, (1 | LIBUSB_ENDPOINT_OUT), data, length, &actual, 0);
+
+    if(r != 0 || length != actual)
+        return false;
+
+    return true;
+}
+
+
+unsigned char *LaserdockDevice::usb_get(unsigned char * data, int length){
+
+    int r, actual;
+
+    //hexDump("response request", (unsigned char *)ba.data(), ba.length());
+
+    r = libusb_bulk_transfer(d->devh_ctl, (1 | LIBUSB_ENDPOINT_OUT), data, length, &actual, 0);
+    if(r != 0 || actual != length)
+        return NULL;
+
+    unsigned char * response = (unsigned char *)calloc(64, 1);
+
+    r = libusb_bulk_transfer(d->devh_ctl, (1 | LIBUSB_ENDPOINT_IN), response, 64, &actual, 0);
+
+    if(r != 0 || actual != 64 || response[1] != 0)
+    {
+        printf("Read Error: %d, %d\n",  r, actual);
+        //free(response);
+        return NULL;
+    }
+
+    return response;
+}
+
 
 bool LaserdockDevice::get_output(bool *enabled) {
     uint8_t enabled8;
@@ -279,7 +318,7 @@ bool LaserdockDevice::send(unsigned char *data, uint32_t length) {
     int rv = 0; int transferred = 0;
     do {
         rv = libusb_bulk_transfer(d->devh_data, (3 | LIBUSB_ENDPOINT_OUT), (unsigned char*) data, length,
-                                 &transferred, 0);
+                                 &transferred, 33);
         if(rv==LIBUSB_ERROR_TIMEOUT){
             timeout_strikes--;
         }
@@ -353,45 +392,6 @@ bool LaserdockDevice::runner_mode_load(LaserdockSample *samples, uint16_t positi
     bool r =  sendraw(d->devh_ctl, request, rlen, response);
     //hexDump("Response",response, 64);
     return r;
-}
-
-
-bool LaserdockDevice::usb_send(unsigned char * data, int length){
-    //printf("sending usb, numbytes %d.\n", numbytes);
-    //hexDump("request", (unsigned char *)ba.data(), ba.length());
-
-    int r, actual;
-    r = libusb_bulk_transfer(d->devh_ctl, (1 | LIBUSB_ENDPOINT_OUT), data, length, &actual, 0);
-
-    if(r != 0 || length != actual)
-        return false;
-
-    return true;
-}
-
-
-unsigned char *LaserdockDevice::usb_get(unsigned char * data, int length){
-
-    int r, actual;
-
-    //hexDump("response request", (unsigned char *)ba.data(), ba.length());
-
-    r = libusb_bulk_transfer(d->devh_ctl, (1 | LIBUSB_ENDPOINT_OUT), data, length, &actual, 0);
-    if(r != 0 || actual != length)
-        return NULL;
-
-    unsigned char * response = (unsigned char *)calloc(64, 1);
-
-    r = libusb_bulk_transfer(d->devh_ctl, (1 | LIBUSB_ENDPOINT_IN), response, 64, &actual, 0);
-
-    if(r != 0 || actual != 64 || response[1] != 0)
-    {
-        printf("Read Error: %d, %d\n",  r, actual);
-        //free(response);
-        return NULL;
-    }
-
-    return response;
 }
 
 

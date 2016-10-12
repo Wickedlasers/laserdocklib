@@ -22,7 +22,7 @@ void print_uint32(string name, LaserdockDevice *d, ReadMethodPtr method){
 
 int main() {
     LaserdockDeviceManager &lddmanager = LaserdockDeviceManager::getInstance();
-    LaserdockDevice d =  *lddmanager.get_next_available_device();
+    LaserdockDevice &d =  *lddmanager.get_next_available_device();
 
     print_uint32("Firmware major version", &d, &LaserdockDevice::version_major_number);
     print_uint32("Firmware minor version", &d, &LaserdockDevice::version_minor_number);

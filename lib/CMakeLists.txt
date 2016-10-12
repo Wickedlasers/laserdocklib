@@ -3,8 +3,6 @@ set(LASERDOCKLIB_SOURCE_FILES
         LaserdockDevice.h
         LaserdockDeviceManager.cpp
         LaserdockDeviceManager.h
-        hexDump.cpp
-        hexDump.h
         )
 
 add_library(laserdocklib ${LASERDOCKLIB_SOURCE_FILES})

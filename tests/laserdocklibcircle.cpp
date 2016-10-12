@@ -1,9 +1,9 @@
-#include "LaserdockDevice.h"
-#include "LaserdockDeviceManager.h"
-
 #include <iostream>
 #include <string>
 #include <cmath>
+
+#include "lib/LaserdockDeviceManager.h"
+#include "lib/LaserdockDevice.h"
 
 using namespace std;
 

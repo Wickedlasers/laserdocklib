@@ -5,5 +5,5 @@ set(LASERDOCKLIB_SOURCE_FILES
         LaserdockDeviceManager.h
         )
 
-add_library(laserdocklib ${LASERDOCKLIB_SOURCE_FILES})
-target_link_libraries(laserdocklib )
+add_library(laserdocklib SHARED ${LASERDOCKLIB_SOURCE_FILES})
+target_link_libraries(laserdocklib ${LIBRARIES})

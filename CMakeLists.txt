@@ -4,6 +4,10 @@ project(laserdocklib)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(APPLE)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9")
+endif()
+
 include(local.cmake)
 
 add_subdirectory(lib)

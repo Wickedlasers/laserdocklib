@@ -8,8 +8,6 @@ if(APPLE)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9")
 endif()
 
-include(local.cmake)
-
 add_subdirectory(lib)
 add_subdirectory(tests)
 

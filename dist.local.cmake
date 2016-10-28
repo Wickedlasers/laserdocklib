@@ -1,5 +1,0 @@
-if(WIN32)
-    file(GLOB LIBRARIES "libusb/*.lib")
-else()
-    file(GLOB LIBRARIES "libusb/*.dylib")
-endif()

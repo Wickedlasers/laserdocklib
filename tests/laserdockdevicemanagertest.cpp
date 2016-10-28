@@ -23,7 +23,7 @@ void print_uint32(string name, LaserdockDevice *d, ReadMethodPtr method){
 int main() {
     LaserdockDeviceManager &lddmanager = LaserdockDeviceManager::getInstance();
 
-    lddmanager.list_laserdock_devices();
+    lddmanager.print_laserdock_devices();
     LaserdockDevice * device =  lddmanager.get_next_available_device();
 
     if(device == NULL) {

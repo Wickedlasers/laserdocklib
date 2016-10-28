@@ -6,16 +6,25 @@
 #define LASERDOCKLIB_LASERDOCKDEVICEMANAGER_H
 
 #include <memory>
+#include <vector>
+
+#ifdef _WIN32
+#define LASERDOCKLIB_EXPORT __declspec(dllexport)
+#else
+#define LASERDOCKLIB_EXPORT
+#endif
 
 class LaserdockDevice;
 class LaserdockDeviceManagerPrivate;
 
-class LaserdockDeviceManager
+class LASERDOCKLIB_EXPORT LaserdockDeviceManager
 {
 public:
     static LaserdockDeviceManager& getInstance();
 
-    void list_laserdock_devices();
+    void print_laserdock_devices();
+
+    std::vector<std::unique_ptr<LaserdockDevice> > get_laserdock_devices();
     LaserdockDevice *get_next_available_device();
 
 private:

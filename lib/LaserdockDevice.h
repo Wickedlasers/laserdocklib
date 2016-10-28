@@ -10,6 +10,12 @@
 
 #include "libusb/libusb.h"
 
+#ifdef _WIN32
+#define LASERDOCKLIB_EXPORT __declspec(dllexport)
+#else
+#define LASERDOCKLIB_EXPORT
+#endif
+
 typedef struct
 {
     uint16_t rg;      //lower byte is red, top byte is green
@@ -26,7 +32,7 @@ uint16_t laserdock_sample_flip(uint16_t);
 
 class LaserdockDevicePrivate;
 
-class LaserdockDevice {
+class LASERDOCKLIB_EXPORT LaserdockDevice {
 
 public:
 

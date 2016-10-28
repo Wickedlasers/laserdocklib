@@ -314,7 +314,7 @@ bool LaserdockDevice::send(unsigned char *data, uint32_t length) {
     int rv = 0; int transferred = 0;
     do {
         rv = libusb_bulk_transfer(d->devh_data, (3 | LIBUSB_ENDPOINT_OUT), (unsigned char*) data, length,
-                                 &transferred, 33);
+                                 &transferred, 0);
         if(rv==LIBUSB_ERROR_TIMEOUT){
             timeout_strikes--;
         }

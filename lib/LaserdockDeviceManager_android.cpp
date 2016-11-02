@@ -7,6 +7,7 @@
 #include <jni.h>
 
 #include <QtDebug>
+#include <QtAndroid>
 #include <QAndroidJniEnvironment>
 #include <QAndroidJniObject>
 
@@ -19,7 +20,8 @@ std::vector<std::unique_ptr<LaserdockDevice> > LaserdockDeviceManagerPrivate::ge
     std::vector<std::unique_ptr<LaserdockDevice>> laserdockDevices;
 
     // get laserdock devices
-    jobjectArray objectArray = JavaUsbDeviceHelper::getInstance()->getLaserdockDevices();
+    QAndroidJniObject usbDevicesJni = JavaUsbDeviceHelper::getInstance()->getLaserdockDevices();;
+    jobjectArray objectArray = usbDevicesJni.object<jobjectArray>();
 
     QAndroidJniEnvironment qjniEnv;
     int length = qjniEnv->GetArrayLength(objectArray);

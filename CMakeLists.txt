@@ -22,5 +22,4 @@ if (ANDROID)
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/lib/libusb/android-${ANDROID_ARCH_NAME}/libusb1.0.so
         INSTALL
         )
-
 endif()

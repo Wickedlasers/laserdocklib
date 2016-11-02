@@ -22,9 +22,10 @@ class LASERDOCKLIB_EXPORT LaserdockDeviceManager
 public:
     static LaserdockDeviceManager& getInstance();
 
-    void print_laserdock_devices();
-
     std::vector<std::unique_ptr<LaserdockDevice> > get_laserdock_devices();
+
+    // helper methods
+    void print_laserdock_devices();
     LaserdockDevice *get_next_available_device();
 
 private:

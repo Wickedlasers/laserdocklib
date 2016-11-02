@@ -3,9 +3,15 @@
 //
 
 #include "LaserdockDevice.h"
+#include "LaserdockDevice_p.h"
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
+#include <iostream>
+
+#include "libusb/libusb.h"
+
+/// ---------------------------- anonymouse namespace ----------------------------
 
 namespace {
 
@@ -116,70 +122,11 @@ namespace {
     }
 }
 
-struct LaserdockDevicePrivate {
 
-    struct libusb_device_handle *devh_ctl;
-    struct libusb_device_handle *devh_data;
-    libusb_device * usbdevice;
+/// ---------------------------- LaserdockDevice ----------------------------
 
-    bool flipx;
-    bool flipy;
-
-    LaserdockDevice::LaserdockDeviceStatus status;
-
-    LaserdockDevicePrivate( libusb_device * device, LaserdockDevice * q_ptr) :
-            q(q_ptr) ,
-            usbdevice(device),
-            devh_ctl(NULL),
-            devh_data(NULL),
-            status(LaserdockDevice::LaserdockDeviceStatus::UNKNOWN),
-            flipx(true),
-            flipy(false)
-    {
-
-    }
-
-    void initialize() {
-        int r = 0;
-        r = libusb_open(this->usbdevice, &this->devh_ctl);
-        if (r != 0) return;
-        r = libusb_open(this->usbdevice, &this->devh_data);
-        if (r != 0) return;
-
-        r = libusb_claim_interface(this->devh_ctl, 0);
-        if (r != 0) return;
-
-        r = libusb_claim_interface(this->devh_data, 1);
-        if (r != 0) return;
-
-        r = libusb_set_interface_alt_setting(this->devh_data, 1, 1);
-        if (r != 0) return;
-
-        this->status = LaserdockDevice::LaserdockDeviceStatus::INITIALIZED;
-    }
-
-    void release(){
-//        int r = 0;
-//        r = libusb_release_interface(this->devh_ctl, 0);
-//        if (r != 0)
-//            fprintf(stderr, "Error releasing interface 0\n");
-//        r = libusb_release_interface(this->devh_ctl, 1);
-//        if (r != 0)
-//            fprintf(stderr, "Error releasing interface 1\n");
-    }
-
-    ~LaserdockDevicePrivate(){
-        this->release();
-        libusb_close(this->devh_ctl);
-        libusb_close(this->devh_data);
-    }
-
-private:
-    LaserdockDevice * q;
-};
-
-
-LaserdockDevice::LaserdockDevice(libusb_device * usbdevice) : d(new LaserdockDevicePrivate(usbdevice, this))
+LaserdockDevice::LaserdockDevice(libusb_device * usbdevice)
+    : d(new LaserdockDevicePrivate(usbdevice, this))
 {
     d->initialize();
 }
@@ -191,7 +138,7 @@ bool LaserdockDevice::enable_output() {
     return suint8(d->devh_ctl, 0x80, 0x01);
 }
 
-LaserdockDevice::LaserdockDeviceStatus LaserdockDevice::status() {
+LaserdockDevice::Status LaserdockDevice::status() const {
     return d->status;
 }
 
@@ -229,6 +176,11 @@ unsigned char *LaserdockDevice::usb_get(unsigned char * data, int length){
     }
 
     return response;
+}
+
+void LaserdockDevice::print() const
+{
+    d->print();
 }
 
 
@@ -398,3 +350,58 @@ uint16_t float_to_laserdock_xy(float var)
 uint16_t laserdock_sample_flip(uint16_t value){
     return 4095 - value;
 }
+
+/// ---------------------------- LaserdockDevicePrivate ----------------------------
+
+LaserdockDevicePrivate::LaserdockDevicePrivate(libusb_device *device, LaserdockDevice *q_ptr) :
+    q(q_ptr) ,
+    usbdevice(device),
+    devh_ctl(NULL),
+    devh_data(NULL),
+    status(LaserdockDevice::Status::UNKNOWN),
+    flipx(true),
+    flipy(false)
+{
+}
+
+
+
+LaserdockDevicePrivate::~LaserdockDevicePrivate(){
+    this->release();
+    libusb_close(this->devh_ctl);
+    libusb_close(this->devh_data);
+}
+
+
+void LaserdockDevicePrivate::release(){
+    //        int r = 0;
+    //        r = libusb_release_interface(this->devh_ctl, 0);
+    //        if (r != 0)
+    //            fprintf(stderr, "Error releasing interface 0\n");
+    //        r = libusb_release_interface(this->devh_ctl, 1);
+    //        if (r != 0)
+    //            fprintf(stderr, "Error releasing interface 1\n");
+}
+
+void LaserdockDevicePrivate::print() const
+{
+    struct libusb_device_descriptor device_descriptor;
+
+    // Get USB device descriptor
+    int result = libusb_get_device_descriptor(usbdevice, &device_descriptor);
+    if (result < 0) {
+        printf("Failed to get device descriptor!");
+    }
+
+    //  print our devices
+    printf("0x%04x 0x%04x", device_descriptor.idVendor, device_descriptor.idProduct);
+
+    // Print the device manufacturer string
+    char manufacturer[256] = " ";
+    if (device_descriptor.iManufacturer) {
+        libusb_get_string_descriptor_ascii(devh_ctl, device_descriptor.iManufacturer,
+                                           (unsigned char *)manufacturer, sizeof(manufacturer));
+        printf(" %s\n", manufacturer);
+    }
+}
+

@@ -5,20 +5,38 @@
 #include "lib/LaserdockDeviceManager.h"
 #include "lib/LaserdockDevice.h"
 
+#ifdef ANDROID
+#include <android/log.h>
+#endif
+
 using namespace std;
 
 typedef bool (LaserdockDevice::*ReadMethodPtr)(uint32_t *);
+
+void print_string(string str) {
+#ifdef ANDROID
+    __android_log_print(ANDROID_LOG_DEBUG, "LASERDOCKLIB_LOG", "%s", str.c_str());
+#else
+    cout << str << endl;
+#endif
+}
 
 void print_uint32(string name, LaserdockDevice *d, ReadMethodPtr method){
     uint32_t count = 0;
     bool successful = (d->*method)(&count);
 
     if(!successful){
-        cout << "Failed reading " << name << endl;
+        print_string("Failed reading " + name);
+//        cout << "Failed reading " << name << endl;
         return;
     }
 
+#ifdef ANDROID
+    __android_log_print(ANDROID_LOG_DEBUG, "LASERDOCKLIB_LOG", "%s %d", name.c_str(), count);
+#else
     cout << name << ": " << count << endl;
+#endif
+
 }
 
 
@@ -86,8 +104,11 @@ int main() {
 
     samples = (LaserdockSample *)calloc(sizeof(LaserdockSample), samples_per_packet);
 
-    LaserdockDeviceManager &lddmanager = LaserdockDeviceManager::getInstance();
-    LaserdockDevice * device =  lddmanager.get_next_available_device();
+    LaserdockDevice * device =  LaserdockDeviceManager::getInstance().get_next_available_device();
+    if(!device) {
+        print_string("Device not found!");
+        return 0;
+    }
 
     print_uint32("Firmware major version", device, &LaserdockDevice::version_major_number);
     print_uint32("Firmware minor version", device, &LaserdockDevice::version_minor_number);
@@ -97,21 +118,28 @@ int main() {
     device->set_dac_rate(30000);
     print_uint32("Current Dac Rate", device, &LaserdockDevice::dac_rate);
 
-    cout << "Clearing ringbuffer: " << device->clear_ringbuffer() << endl;
+    bool isClearRingbuffer = device->clear_ringbuffer();
+    if(isClearRingbuffer) {
+        print_string("Clearing ringbuffer");
+    } else {
+        print_string("Clearing ringbuffer not ok");
+    }
 
     bool enabled = false ;
 
     if(!device->enable_output()){
-        cout << "Failed enabling output state" << endl;
+        print_string("Failed enabling output state");
     }
 
     if(!device->get_output(&enabled)){
-        cout << "Failed reading output state" << endl;
-    } else
-    {
-        cout << "Output Enabled/Disabled: " << enabled << endl;
+        print_string("Failed reading output state");
+    } else {
+        if(enabled) {
+            print_string("Output Enabled");
+        } else {
+            print_string("Output Disabled");
+        }
     }
-
 
     CircleBuffer cbuffer(circle_steps);
 

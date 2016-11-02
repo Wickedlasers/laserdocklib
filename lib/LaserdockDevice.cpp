@@ -368,6 +368,7 @@ LaserdockDevicePrivate::LaserdockDevicePrivate(libusb_device *device, LaserdockD
 
 LaserdockDevicePrivate::~LaserdockDevicePrivate(){
     this->release();
+    // TODO: add device close for android with UsbDevice
     libusb_close(this->devh_ctl);
     libusb_close(this->devh_data);
 }

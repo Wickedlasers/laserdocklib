@@ -13,8 +13,8 @@
 #define LASERDOCKLIB_EXPORT
 #endif
 
-uint16_t float_to_laserdock_xy(float var);
-uint16_t laserdock_sample_flip(uint16_t);
+uint16_t LASERDOCKLIB_EXPORT float_to_laserdock_xy(float var);
+uint16_t LASERDOCKLIB_EXPORT laserdock_sample_flip(uint16_t);
 
 struct LaserdockSample
 {

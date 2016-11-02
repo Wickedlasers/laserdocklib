@@ -28,9 +28,7 @@ add_library(laserdocklib SHARED ${LASERDOCKLIB_SOURCE_FILES})
 
 
 if(WIN32)
-    file(GLOB_RECURSE LIBUSB
-        ${CMAKE_CURRENT_SOURCE_DIR}/libusb/*.lib
-    )
+    set(LIBUSB ${CMAKE_CURRENT_SOURCE_DIR}/libusb/libusb-1.0.lib)
 endif()
 
 if(APPLE)
@@ -52,14 +50,10 @@ endif()
 if(ANDROID)
     find_package(Qt5 5.7.0 CONFIG REQUIRED Core AndroidExtras)
 
-    file(GLOB_RECURSE LIBUSB
-        ${CMAKE_CURRENT_SOURCE_DIR}/libusb/android-${ANDROID_ARCH_NAME}/libusb1.0.so
-    )
+    set(LIBUSB ${CMAKE_CURRENT_SOURCE_DIR}/libusb/android-${ANDROID_ARCH_NAME}/libusb1.0.so)
     set(QT_LIBRARIES Qt5::Core Qt5::AndroidExtras)
 else()
     set(QT_LIBRARIES)
 endif()
-
-
 
 target_link_libraries(laserdocklib ${LIBUSB} ${QT_LIBRARIES})

@@ -9,12 +9,14 @@
 
 #include <jni.h>
 
+class QAndroidJniObject;
+
 class JavaUsbDeviceHelper {
 
 public:
     static JavaUsbDeviceHelper *getInstance();
 
-    jobjectArray getLaserdockDevices();
+    QAndroidJniObject getLaserdockDevices();
     jint openDevice(jobject usbDevice);
 
 private:

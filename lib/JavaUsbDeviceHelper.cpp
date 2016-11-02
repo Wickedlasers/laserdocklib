@@ -11,14 +11,12 @@ JavaUsbDeviceHelper *JavaUsbDeviceHelper::getInstance()
     return &instance;
 }
 
-jobjectArray JavaUsbDeviceHelper::getLaserdockDevices()
+QAndroidJniObject JavaUsbDeviceHelper::getLaserdockDevices()
 {
-    QAndroidJniObject usbDevicesJni = QAndroidJniObject::callStaticObjectMethod(USB_DEVICE_HELPER_CLASS_NAME,
+    return QAndroidJniObject::callStaticObjectMethod(USB_DEVICE_HELPER_CLASS_NAME,
                                                                                 "getLaserdockDevices",
                                                                                 "(Landroid/content/Context;)[Landroid/hardware/usb/UsbDevice;",
                                                                                 QtAndroid::androidActivity().object());
-
-    return usbDevicesJni.object<jobjectArray>();
 }
 
 jint JavaUsbDeviceHelper::openDevice(jobject usbDevice)

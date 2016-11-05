@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-include(local.cmake)
+include(local.cmake OPTIONAL)
 
 # Android toolchain: should be before project() call
 if(BUILD_ANDROID)

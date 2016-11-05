@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 include(local.cmake)
 
-# Android compiler: should be before project() call
+# Android toolchain: should be before project() call
 if(BUILD_ANDROID)
     # setup Android toolchain
     set(CMAKE_TOOLCHAIN_FILE qt-android-cmake/toolchain/android.toolchain.cmake)

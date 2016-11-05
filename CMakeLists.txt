@@ -4,14 +4,6 @@ include(local.cmake)
 
 # Android compiler: should be before project() call
 if(BUILD_ANDROID)
-    # Platform specific variables
-    if(ANDROID_ABI STREQUAL "armeabi-v7a")
-        # Toolchain prefixt
-        set(ANDROID_TOOLCHAIN_PREFIX "arm-linux-androideabi")
-    elseif(ANDROID_ABI STREQUAL "x86")
-        # Toolchain prefix
-        set(ANDROID_TOOLCHAIN_PREFIX "x86")
-    endif()
     # setup Android toolchain
     set(CMAKE_TOOLCHAIN_FILE qt-android-cmake/toolchain/android.toolchain.cmake)
 endif()

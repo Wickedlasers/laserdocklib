@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 include(local.cmake)
 
 # Android compiler: should be before project() call
-if(DEFINED BUILD_ANDROID)
+if(BUILD_ANDROID)
     # Platform specific variables
     if(ANDROID_ABI STREQUAL "armeabi-v7a")
         # Toolchain prefixt

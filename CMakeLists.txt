@@ -8,10 +8,8 @@ cmake_minimum_required(VERSION 3.5)
 
 # Android compiler: should be before project() call
 if(DEFINED BUILD_ANDROID)
-    # You should manually remove build dir and reopen CMake project from scratch after change this value
-    set(ANDROID_ABI "x86") # "x86" or "armeabi-v7a" values supported
     include(local.android.cmake)
-    # call toolchain script
+    # toolchain detection script
     set(CMAKE_TOOLCHAIN_FILE qt-android-cmake/toolchain/android.toolchain.cmake)
 endif()
 

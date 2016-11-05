@@ -1,15 +1,18 @@
 cmake_minimum_required(VERSION 3.5)
 
-# Uncomment this line to build Android version
-# You should manually remove build dir and reopen CMake project from scratch after change this value
-#set(BUILD_ANDROID true)
-
-#set(CMAKE_VERBOSE_MAKEFILE ON)
+include(local.cmake)
 
 # Android compiler: should be before project() call
 if(DEFINED BUILD_ANDROID)
-    include(local.android.cmake)
-    # toolchain detection script
+    # Platform specific variables
+    if(ANDROID_ABI STREQUAL "armeabi-v7a")
+        # Toolchain prefixt
+        set(ANDROID_TOOLCHAIN_PREFIX "arm-linux-androideabi")
+    elseif(ANDROID_ABI STREQUAL "x86")
+        # Toolchain prefix
+        set(ANDROID_TOOLCHAIN_PREFIX "x86")
+    endif()
+    # setup Android toolchain
     set(CMAKE_TOOLCHAIN_FILE qt-android-cmake/toolchain/android.toolchain.cmake)
 endif()
 

@@ -26,7 +26,6 @@ endif()
 
 add_library(laserdocklib SHARED ${LASERDOCKLIB_SOURCE_FILES})
 
-
 if(WIN32)
     set(LIBUSB ${CMAKE_CURRENT_SOURCE_DIR}/libusb/libusb-1.0.lib)
 endif()
@@ -37,7 +36,7 @@ if(APPLE)
     )
 endif()
 
-if(UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE AND NOT ANDROID)
     set(LINUX TRUE)
 endif()
 

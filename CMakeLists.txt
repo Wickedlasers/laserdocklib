@@ -23,7 +23,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # OS X min deployment
 if(APPLE)
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9")
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.8")
+    set(CMAKE_CXX_FLAGS "-stdlib=libc++")
 endif()
 
 add_subdirectory(lib)

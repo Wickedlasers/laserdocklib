@@ -24,11 +24,15 @@ public class UsbDeviceHelper {
     private static final String ACTION_USB_PERMISSION =
             "com.wickedlasers.laserdock.USB_PERMISSION";
 
+   private static boolean m_isRequestingPermission = false;
+
     private static final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (ACTION_USB_PERMISSION.equals(action)) {
                 synchronized (this) {
+                    m_isRequestingPermission = false;
+
                     UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         Log.d(TAG, "permission granted for device " + device);
@@ -69,10 +73,15 @@ public class UsbDeviceHelper {
             // ok, open
             return doOpenDevice(context, device);
         } else {
+            if(m_isRequestingPermission) {
+                return -1;
+            }
+
             // request permission
             PendingIntent pi = PendingIntent.getBroadcast(context, 0, new Intent(
                     ACTION_USB_PERMISSION), 0);
             manager.requestPermission(device, pi);
+            m_isRequestingPermission = true;
             return -1;
         }
     }

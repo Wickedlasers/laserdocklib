@@ -10,14 +10,14 @@ This library has three targets
 Tested under OS X 10.11 and comes with libusb 1.0 dylib.
 
 
+# How to build for Android:
+1) 
+```
+$ cp dist.local.cmake local.cmake
+$ cp dist.local.android.cmake local.android.cmake
+```
 
+2) Setup correct pathes in android.local.cmake
 
-How to build for Android:
-Checked in Qt Creator with Qt 5.7 armeabi-v7a.
-CMake configuration:
-CMAKE_TOOLCHAIN_FILE=/Users/ncuxer/Projects/laserdocklib/platforms/android.cmake
-CMAKE_CXX_COMPILER=/Users/ncuxer/Dev/android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-g++
+3) Set BUILD_ANDROID ON in local.cmake and choose ABI with ANDROID_ABI in local.android.cmake
 
-Environment variables:
-ANDROID_NDK=/Users/ncuxer/Dev/android/sdk/ndk-bundle
-ANDROID_SDK=/Users/ncuxer/Dev/android/sdk

@@ -1,6 +1,8 @@
 # set Android ABI
 # You should manually remove build dir and reopen CMake project from scratch after change this value
-set(ANDROID_ABI "x86") # currently "x86" or "armeabi-v7a" values supported
+if(NOT DEFINED ANDROID_ABI)
+    set(ANDROID_ABI "x86") # currently "x86" or "armeabi-v7a" values supported
+endif()
 
 # Android SDK
 set(QT_ANDROID_SDK_ROOT /Users/ncuxer/Dev/android/sdk)

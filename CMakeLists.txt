@@ -1,11 +1,27 @@
 cmake_minimum_required(VERSION 3.5)
-project(laserdocklib)
+
+# Uncomment this line to build Android version
+# You should manually remove build dir and reopen CMake project from scratch after change this value
+#set(BUILD_ANDROID true)
 
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
+# Android compiler: should be before project() call
+if(DEFINED BUILD_ANDROID)
+    # You should manually remove build dir and reopen CMake project from scratch after change this value
+    set(ANDROID_ABI "x86") # "x86" or "armeabi-v7a" values supported
+    include(local.android.cmake)
+    # call toolchain script
+    set(CMAKE_TOOLCHAIN_FILE qt-android-cmake/toolchain/android.toolchain.cmake)
+endif()
+
+project(laserdocklib)
+
+# C++11
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# OS X min deployment
 if(APPLE)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9")
 endif()
@@ -13,6 +29,7 @@ endif()
 add_subdirectory(lib)
 add_subdirectory(tests)
 
+# Android APK test package
 if (ANDROID)
     include(qt-android-cmake/AddQtAndroidApk.cmake)
     add_qt_android_apk(laserdocklibcircle_apk laserdocklibcircle

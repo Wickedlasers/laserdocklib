@@ -33,3 +33,6 @@
 ~*
 
 local.cmake
+
+__build*
+.vscode/*

@@ -39,3 +39,7 @@ local.android.cmake
 
 # Qt Creator temp file
 CMakeLists.txt.user
+
+# Ignore editor settings
+**/.vs
+**/.vscode

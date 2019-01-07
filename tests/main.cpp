@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cstdio>
 
 #include "lib/LaserdockDevice.h"
 #include "lib/LaserdockDeviceManager.h"
@@ -67,6 +68,8 @@ int main() {
     {
         cout << "Output Enabled/Disabled: " << enabled << endl;
     }
+
+	getchar();
 
     return 0;
 }

@@ -56,3 +56,4 @@ else()
 endif()
 
 target_link_libraries(laserdocklib ${LIBUSB} ${QT_LIBRARIES})
+

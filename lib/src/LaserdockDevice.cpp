@@ -2,14 +2,16 @@
 // Created by Guoping Huang on 8/8/16.
 //
 
-#include "LaserdockDevice.h"
+#include "laserdocklib/LaserdockDevice.h"
 #include "LaserdockDevice_p.h"
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
 #include <iostream>
 
-#include "libusb/libusb.h"
+#include <libusb/libusb.h>
+
+#include <laserdocklib/LaserdockSample.h>
 
 /// ---------------------------- anonymouse namespace ----------------------------
 

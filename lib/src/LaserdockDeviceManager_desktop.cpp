@@ -1,9 +1,9 @@
-#include "LaserdockDeviceManager.h"
+#include "laserdocklib/LaserdockDeviceManager.h"
 #include "LaserdockDeviceManager_p.h"
 
-#include "libusb/libusb.h"
+#include <libusb/libusb.h>
 
-#include "LaserdockDevice.h"
+#include "laserdocklib/LaserdockDevice.h"
 
 std::vector<std::unique_ptr<LaserdockDevice> > LaserdockDeviceManagerPrivate::get_devices() {
     std::vector<std::unique_ptr<LaserdockDevice>> laserdockDevices;

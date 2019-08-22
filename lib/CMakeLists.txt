@@ -1,59 +1,63 @@
-set(LASERDOCKLIB_SOURCE_FILES
-        LaserdockDevice.cpp
-        LaserdockDevice.h
-        LaserdockDevice_p.h
-        LaserdockDeviceManager.cpp
-        LaserdockDeviceManager.h
-        LaserdockDeviceManager_p.h
-        )
+cmake_minimum_required(VERSION 3.11)
+
+project(laserdocklib)
+
+add_library(${PROJECT_NAME} SHARED)
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
+
+set(SRCDIR ${CMAKE_CURRENT_LIST_DIR}/src)
+set(INCDIR ${CMAKE_CURRENT_LIST_DIR}/include/laserdocklib)
+
+target_sources(${PROJECT_NAME} PRIVATE
+    ${INCDIR}/LaserdockDevice.h
+    ${INCDIR}/LaserdockDeviceManager.h
+    ${INCDIR}/Laserdocklib.h
+    ${INCDIR}/LaserdockSample.h
+    ${SRCDIR}/LaserdockDevice.cpp
+    ${SRCDIR}/LaserdockDevice_p.h
+    ${SRCDIR}/LaserdockDeviceManager.cpp
+    ${SRCDIR}/LaserdockDeviceManager_p.h
+    )
 
 if(ANDROID)
-    set(LASERDOCKLIB_SOURCE_FILES
-        ${LASERDOCKLIB_SOURCE_FILES}
+    target_sources(${PROJECT_NAME} PRIVATE
+        ${SRCDIR}/JavaUsbDeviceHelper.cpp
+        ${SRCDIR}/JavaUsbDeviceHelper.h
+        ${SRCDIR}/LaserdockDeviceManager_android.cpp
+        ${SRCDIR}/LaserdockDevice_android.cpp
         java/com/wickedlasers/laserdocklib/UsbDeviceHelper.java
-        JavaUsbDeviceHelper.cpp
-        JavaUsbDeviceHelper.h
-        LaserdockDeviceManager_android.cpp
-        LaserdockDevice_android.cpp
         )
 else()
-    set(LASERDOCKLIB_SOURCE_FILES
-        ${LASERDOCKLIB_SOURCE_FILES}
-        LaserdockDeviceManager_desktop.cpp
-        LaserdockDevice_desktop.cpp
+    target_sources(${PROJECT_NAME} PRIVATE
+        ${SRCDIR}/LaserdockDeviceManager_desktop.cpp
+        ${SRCDIR}/LaserdockDevice_desktop.cpp
         )
 endif()
 
-add_library(laserdocklib SHARED ${LASERDOCKLIB_SOURCE_FILES})
+# libusb
+add_subdirectory(3rdparty/libusb)
+target_link_libraries(${PROJECT_NAME} PRIVATE libusb)
 
-if(WIN32)
-    set(LIBUSB ${CMAKE_CURRENT_SOURCE_DIR}/libusb/libusb-1.0.lib)
-endif()
 
-if(APPLE)
-    file(GLOB_RECURSE LIBUSB
-        ${CMAKE_CURRENT_SOURCE_DIR}/libusb/*.dylib
-    )
-endif()
-
-if(UNIX AND NOT APPLE AND NOT ANDROID)
-    set(LINUX TRUE)
-endif()
-
-if(LINUX)
-    file(GLOB_RECURSE LIBUSB
-        ${CMAKE_CURRENT_SOURCE_DIR}/libusb/*.so
-    )
-endif()
-
+# Qt
 if(ANDROID)
     find_package(Qt5 5.7.0 CONFIG REQUIRED Core AndroidExtras)
-
-    set(LIBUSB ${CMAKE_CURRENT_SOURCE_DIR}/libusb/android-${ANDROID_ARCH_NAME}/libusb1.0.so)
-    set(QT_LIBRARIES Qt5::Core Qt5::AndroidExtras)
-else()
-    set(QT_LIBRARIES)
+    target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt5::AndroidExtras)
 endif()
 
-target_link_libraries(laserdocklib ${LIBUSB} ${QT_LIBRARIES})
+# install
+if(NOT WIN32)
+    include(GNUInstallDirs)
+    set_property(TARGET laserdocklib PROPERTY PUBLIC_HEADER
+        ${INCDIR}/Laserdocklib.h
+        ${INCDIR}/LaserdockDevice.h
+        ${INCDIR}/LaserdockDeviceManager.h
+        ${INCDIR}/LaserdockSample.h
+        )
 
+    install(TARGETS laserdocklib
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/laserdocklib)
+endif()

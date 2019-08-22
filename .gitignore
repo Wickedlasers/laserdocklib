@@ -10,20 +10,9 @@
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
 # Fortran module files
 *.mod
 *.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
 
 # Executables
 *.exe
@@ -38,7 +27,7 @@ local.cmake
 local.android.cmake
 
 # Qt Creator temp file
-CMakeLists.txt.user
+CMakeLists.txt.user*
 
 # Ignore editor settings
 **/.vs

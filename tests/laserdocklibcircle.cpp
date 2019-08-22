@@ -6,8 +6,9 @@
 #include <string>
 #include <cmath>
 
-#include "lib/LaserdockDeviceManager.h"
-#include "lib/LaserdockDevice.h"
+#include <laserdocklib/LaserdockDevice.h>
+#include <laserdocklib/LaserdockDeviceManager.h>
+#include <laserdocklib/LaserdockSample.h>
 
 #ifdef ANDROID
 #include <android/log.h>
@@ -111,7 +112,7 @@ int main() {
     LaserdockDevice * device =  LaserdockDeviceManager::getInstance().get_next_available_device();
     if(!device) {
         print_string("Device not found!");
-        return 0;
+        return 1;
     }
 
     print_uint32("Firmware major version", device, &LaserdockDevice::version_major_number);

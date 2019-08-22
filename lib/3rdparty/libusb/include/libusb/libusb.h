@@ -25,6 +25,14 @@
 #ifndef LIBUSB_H
 #define LIBUSB_H
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wzero-length-array"
+
+#pragma gcc diagnostic push
+#pragma gcc diagnostic ignored "-Wzero-length-array"
+#pragma gcc diagnostic ignored "-Wpedantic"
+#pragma gcc diagnostic ignored "-Wshadow"
+
 #ifdef _MSC_VER
 /* on MS environments, the inline keyword is available in C++ only */
 #if !defined(__cplusplus)
@@ -2008,5 +2016,8 @@ void LIBUSB_CALL libusb_hotplug_deregister_callback(libusb_context *ctx,
 #ifdef __cplusplus
 }
 #endif
+
+#pragma clang diagnostic pop
+#pragma gcc diagnostic pop
 
 #endif

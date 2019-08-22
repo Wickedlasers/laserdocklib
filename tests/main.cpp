@@ -2,8 +2,8 @@
 #include <string>
 #include <cstdio>
 
-#include "lib/LaserdockDevice.h"
-#include "lib/LaserdockDeviceManager.h"
+#include <laserdocklib/LaserdockDevice.h>
+#include <laserdocklib/LaserdockDeviceManager.h>
 
 using namespace std;
 
@@ -26,7 +26,11 @@ int main() {
 
     LaserdockDeviceManager &lddmanager = LaserdockDeviceManager::getInstance();
     LaserdockDevice * device =  lddmanager.get_next_available_device();
-    
+    if(!device) {
+        cout << "Error finding any available device!!" << endl;
+        return 1;
+    }
+
     cout << "Device Status:" << device->status() << endl;
     print_uint32("Firmware major version", device, &LaserdockDevice::version_major_number);
     print_uint32("Firmware minor version", device, &LaserdockDevice::version_minor_number);

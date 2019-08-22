@@ -1,12 +1,11 @@
-#include "LaserdockDeviceManager.h"
-#include "LaserdockDeviceManager_p.h"
+#include "laserdocklib/LaserdockDeviceManager.h"
 
 #include <cstdio>
 #include <vector>
 
-#include "libusb/libusb.h"
+#include <libusb/libusb.h>
 
-#include "LaserdockDevice.h"
+#include "laserdocklib/LaserdockDevice.h"
 #include "LaserdockDeviceManager_p.h"
 
 #define LASERDOCK_VIN 0x1fc9

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cstring>
 
 #include "lib/LaserdockDeviceManager.h"
 #include "lib/LaserdockDevice.h"

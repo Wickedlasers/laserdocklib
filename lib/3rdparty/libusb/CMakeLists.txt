@@ -5,10 +5,19 @@ add_library(libusb SHARED IMPORTED GLOBAL)
 set_property(TARGET libusb PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_LIST_DIR}/include)
 
 if(WIN32)
-    set_target_properties(libusb PROPERTIES
-        IMPORTED_LOCATION "${CMAKE_CURRENT_LIST_DIR}/lib/win/libusb-1.0.dll"
-        IMPORTED_IMPLIB "${CMAKE_CURRENT_LIST_DIR}/lib/win/libusb-1.0.lib"
-        )
+    if(CMAKE_GENERATOR STREQUAL "Visual Studio 16 2019" )
+        # vs 2019 x64
+        set_target_properties(libusb PROPERTIES
+            IMPORTED_LOCATION "${CMAKE_CURRENT_LIST_DIR}/lib/win/x64/libusb-1.0.dll"
+            IMPORTED_IMPLIB "${CMAKE_CURRENT_LIST_DIR}/lib/win/x64/libusb-1.0.lib"
+            )
+    else()
+        # vs 2017 x86
+        set_target_properties(libusb PROPERTIES
+            IMPORTED_LOCATION "${CMAKE_CURRENT_LIST_DIR}/lib/win/libusb-1.0.dll"
+            IMPORTED_IMPLIB "${CMAKE_CURRENT_LIST_DIR}/lib/win/libusb-1.0.lib"
+            )
+    endif()
 endif()
 
 if(APPLE)

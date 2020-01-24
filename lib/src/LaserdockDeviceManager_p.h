@@ -10,8 +10,8 @@
 
 class LaserdockDeviceManager;
 
-class libusb_device;
-class libusb_context;
+struct libusb_device;
+struct libusb_context;
 
 class LaserdockDeviceManagerPrivate {
 

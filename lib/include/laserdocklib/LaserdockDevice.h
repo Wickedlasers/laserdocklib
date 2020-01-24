@@ -17,7 +17,7 @@ class _jobject;
 typedef _jobject* jobject;
 #endif
 
-class libusb_device;
+struct libusb_device;
 class LaserdockDevicePrivate;
 struct LaserdockSample;
 

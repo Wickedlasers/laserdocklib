@@ -349,6 +349,8 @@ bool LaserdockDevice::runner_mode_load(LaserdockSample *samples, uint16_t positi
 
 uint16_t float_to_laserdock_xy(float var)
 {
+    if (var < -1) var = -1;
+    if (var > 1) var = 1;
     uint16_t val = (4095 * (var + 1.0)/2.0);
     return val;
 }

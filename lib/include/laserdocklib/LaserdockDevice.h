@@ -73,6 +73,7 @@ public:
     unsigned char *usb_get(unsigned char * data, int length);
 
     void print() const;
+    int sdescription(char* buff, int bufferSize);
 
 private:
     std::unique_ptr<LaserdockDevicePrivate> d;

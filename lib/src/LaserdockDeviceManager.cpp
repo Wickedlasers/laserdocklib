@@ -27,7 +27,8 @@ std::vector<std::unique_ptr<LaserdockDevice> > LaserdockDeviceManager::get_laser
 void LaserdockDeviceManager::print_laserdock_devices() {
     std::vector<std::unique_ptr<LaserdockDevice> > devices = get_laserdock_devices();
     for(const std::unique_ptr<LaserdockDevice> &device : devices) {
-        device->print();
+        char* d;
+        printf("%s\n", device->sdescription(d, 64));
     }
 }
 

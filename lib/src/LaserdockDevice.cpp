@@ -182,9 +182,14 @@ unsigned char *LaserdockDevice::usb_get(unsigned char * data, int length){
 
 void LaserdockDevice::print() const
 {
-    d->print();
+    char* desc;
+    int dc = d->sdescription(desc, 64);
+    printf("%s\n", desc);
 }
 
+int LaserdockDevice::sdescription(char* buffer, int bufferSize) {
+    return d->sdescription(buffer, bufferSize);
+}
 
 bool LaserdockDevice::get_output(bool *enabled) {
     uint8_t enabled8;
@@ -344,6 +349,8 @@ bool LaserdockDevice::runner_mode_load(LaserdockSample *samples, uint16_t positi
 
 uint16_t float_to_laserdock_xy(float var)
 {
+    if (var < -1) var = -1;
+    if (var > 1) var = 1;
     uint16_t val = (4095 * (var + 1.0)/2.0);
     return val;
 }
@@ -386,7 +393,7 @@ void LaserdockDevicePrivate::release(){
     //            fprintf(stderr, "Error releasing interface 1\n");
 }
 
-void LaserdockDevicePrivate::print() const
+int LaserdockDevicePrivate::sdescription(char* buffer, int bufferSize)
 {
     struct libusb_device_descriptor device_descriptor;
 
@@ -397,14 +404,17 @@ void LaserdockDevicePrivate::print() const
     }
 
     //  print our devices
-    printf("0x%04x 0x%04x", device_descriptor.idVendor, device_descriptor.idProduct);
+    int bc = sprintf_s(buffer, bufferSize, "0x%04x 0x%04x", device_descriptor.idVendor, device_descriptor.idProduct);
 
     // Print the device manufacturer string
     char manufacturer[256] = " ";
     if (device_descriptor.iManufacturer) {
         libusb_get_string_descriptor_ascii(devh_ctl, device_descriptor.iManufacturer,
-                                           (unsigned char *)manufacturer, sizeof(manufacturer));
-        printf(" %s\n", manufacturer);
+            (unsigned char*)manufacturer, sizeof(manufacturer));
+        
+        bc += sprintf_s(buffer, bufferSize, "%s %s", buffer, manufacturer);
     }
-}
+    
+    return bc;
 
+}

@@ -346,6 +346,27 @@ bool LaserdockDevice::runner_mode_load(LaserdockSample *samples, uint16_t positi
     return r;
 }
 
+std::string LaserdockDevice::get_serial_number() const
+{
+    std::string serialNumber;
+
+    // get descriptor
+    libusb_device_descriptor device_descriptor;
+    int result = libusb_get_device_descriptor(d->usbdevice, &device_descriptor);
+    if (result < 0) {
+        printf("Failed to get device descriptor!");
+    }
+
+
+    char manufacturer[256] = " ";
+    int strSize = libusb_get_string_descriptor_ascii(d->devh_ctl, device_descriptor.iSerialNumber,
+                                      (unsigned char *)manufacturer, sizeof(manufacturer));
+
+    if(strSize >= 0) {
+        serialNumber = manufacturer;
+    }
+    return serialNumber;
+}
 
 uint16_t float_to_laserdock_xy(float var)
 {

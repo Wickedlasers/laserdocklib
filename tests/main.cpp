@@ -32,6 +32,7 @@ int main() {
     }
 
     cout << "Device Status:" << device->status() << endl;
+    cout << "Serial Number:" << device->get_serial_number() << endl;
     print_uint32("Firmware major version", device, &LaserdockDevice::version_major_number);
     print_uint32("Firmware minor version", device, &LaserdockDevice::version_minor_number);
     print_uint32("Max Dac Rate", device, &LaserdockDevice::max_dac_rate);

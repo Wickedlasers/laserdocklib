@@ -6,7 +6,7 @@
 #define LASERDOCKLIB_LASERDOCKDEVICE_H
 
 #include <memory>
-
+#include <string>
 #include <laserdocklib/Laserdocklib.h>
 
 uint16_t LASERDOCKLIB_EXPORT float_to_laserdock_xy(float var);
@@ -74,6 +74,7 @@ public:
 
     void print() const;
     int sdescription(char* buff, int bufferSize);
+    std::string get_serial_number() const;
 
 private:
     std::unique_ptr<LaserdockDevicePrivate> d;
